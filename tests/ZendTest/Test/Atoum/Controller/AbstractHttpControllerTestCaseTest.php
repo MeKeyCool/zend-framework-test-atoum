@@ -269,6 +269,26 @@ class AbstractHttpControllerTestCaseTest extends AbstractHttpControllerTestCase
                 ->isInstanceOf('Zend\Test\Atoum\Exception\ExpectationFailedException');
     }
 
+    public function testAssertQueryContentContains()
+    {
+        $this->dispatch('/tests');
+        $this->assertQueryContentContains('div#content', 'foo');
+
+        $self = $this;
+        $this->exception(function() use ($self) {$self->assertQueryContentContains('div#content', 'bar'); })
+                ->isInstanceOf('Zend\Test\Atoum\Exception\ExpectationFailedException');
+    }
+
+    public function testAssertNotQueryContentContains()
+    {
+        $this->dispatch('/tests');
+        $this->assertNotQueryContentContains('div#content', 'bar');
+
+        $self = $this;
+        $this->exception(function() use ($self) {$self->assertNotQueryContentContains('div#content', 'foo'); })
+                ->isInstanceOf('Zend\Test\Atoum\Exception\ExpectationFailedException');
+    }
+
     public function testAssertQueryWithDynamicQueryParams()
     {
         $this->getRequest()
@@ -302,6 +322,25 @@ class AbstractHttpControllerTestCaseTest extends AbstractHttpControllerTestCase
         $routeMatch = $this->getApplication()->getMvcEvent()->getRouteMatch();
         $this->string($routeMatch->getParam('subdomain'))->isEqualTo('my');
         $this->integer($this->getRequest()->getUri()->getPort())->isEqualTo(443);
+    }
+
+    public function testAssertWithMultiDispatch()
+    {
+        $this->dispatch('/tests');
+        $this->assertQueryCount('div.get', 0);
+        $this->assertQueryCount('div.post', 0);
+
+        $this->reset();
+
+        $this->dispatch('/tests?foo=bar&num_get=3');
+        $this->assertQueryCount('div.get', 3);
+        $this->assertQueryCount('div.post', 0);
+
+        $this->reset();
+
+        $this->dispatch('/tests');
+        $this->assertQueryCount('div.get', 0);
+        $this->assertQueryCount('div.post', 0);
     }
 
     /**
