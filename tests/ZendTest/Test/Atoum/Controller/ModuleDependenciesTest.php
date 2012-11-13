@@ -20,6 +20,22 @@ use Zend\Test\Atoum\Controller\AbstractHttpControllerTestCase;
  */
 class ModuleDependenciesTest extends AbstractHttpControllerTestCase
 {
+    public function __construct(score $score = null, locale $locale = null, adapter $adapter = null)
+    {
+        $namespace = substr(get_class($this), 0, strrpos(get_class($this), '\\'));
+        $class = explode('\\', get_class($this));
+        $className = end($class);
+        $this->setTestNamespace($namespace);
+        spl_autoload_register(function($class) use ($className) {
+            if($class == $className) {
+                eval("namespace{ class $className{}; }");
+                return true;
+            }
+            return false;
+        });
+        parent::__construct($score, $locale, $adapter);
+    }
+
     public function testDependenciesModules()
     {
         $this->setApplicationConfig(
