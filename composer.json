@@ -1,20 +1,18 @@
 {
     "name": "zendframework/atoum",
     "license": "GPL-3.0",
-    "authors": [
-        {
-            "name": "blanchonvincent"
-        },
-        {
-            "name": "MeKeyCool",
-            "email": "mekeycool@gmail.com"
-        }
-    ],
+    "authors": [{
+        "name": "blanchonvincent"
+    }, {
+        "name": "MeKeyCool",
+        "email": "mekeycool@gmail.com"
+    }],
     "autoload": {
-        "psr-0": {"Zend\\Test\\Atoum\\": ""}
+        "psr-0": {
+            "Zend\\Test\\Atoum\\": ""
+        }
     },
-    "minimum-stability": "dev",
     "require": {
-        "mageekguy/atoum" : "dev-master"
+        "atoum/atoum": "dev-master"
     }
 }

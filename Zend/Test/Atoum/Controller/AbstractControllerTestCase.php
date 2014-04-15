@@ -12,9 +12,9 @@ namespace Zend\Test\Atoum\Controller;
 
 
 use mageekguy\atoum;
+use Zend\Console\Console;
 use Zend\Dom;
 use Zend\Mvc\Application;
-use Zend\ModuleManager\ModuleEvent;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\View\SendResponseListener;
 use Zend\Test\Atoum\Exception\ExpectationFailedException;
@@ -74,12 +74,14 @@ class AbstractControllerTestCase extends atoum\test
                 $consoleServiceConfig = array(
                     'service_manager' => array(
                         'factories' => array(
-                            'ServiceListener' => 'Zend\Test\PHPUnit\Mvc\Service\ServiceListenerFactory',
+                          'ServiceListener' => 'Zend\Mvc\Service\ServiceListenerFactory',
                         ),
                     ),
                 );
                 $appConfig = array_replace_recursive($appConfig, $consoleServiceConfig);
             }
+
+            Console::overrideIsConsole($this->useConsoleRequest);
             $this->application = Application::init($appConfig);
 
             $events = $this->application->getEventManager();
